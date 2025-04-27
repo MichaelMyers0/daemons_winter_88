@@ -1,5 +1,7 @@
 CC=cc
 CCFLAGS=-Wall -Wextra
-main:main.c
-	$(CC) $(CCFLAGS) -g $< -o $@
+daemon.o:daemon.c
+	$(CC) $(CCFLAGS) -g -c -O $< -o $@
+main:main.c daemon.o
+	$(CC) $(CCFLAGS) -g -O $^ -o $@
 
