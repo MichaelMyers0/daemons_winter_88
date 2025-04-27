@@ -13,14 +13,18 @@ static open_descriptors()
 	open("/dev/null", O_WRONLY);
 	open("/dev/null", O_WRONLY);
 }
-become_daemon(path)
+become_daemon(path, date)
 const char* path;
+const char* date;
 {
 	int i;
 	pid_t pid, ppid, sid, pgrpid, child;
-	close_descriptors();
-	open_descriptors();
+	time_t t;
+//	close_descriptors();
+//	open_descriptors();
+	t = time(NULL);
 	openlog("main", LOG_PID, LOG_USER);
+	syslog(LOG_INFO, ctime(&t));
 	pid = getpid();
 	ppid = getppid();
 	sid = getsid(0);
@@ -54,16 +58,12 @@ const char* path;
 		}		
 		if (child == 0)
 		{
-			for (i = 0; i < CYCLE; i++)
-			{
-				sleep(SLEEP_T);
-				syslog(LOG_INFO, "Hello World\n");
-			}
 			pid = getpid();
 			ppid = getppid();
 			pgrpid = getpgrp();
 			syslog(LOG_INFO, "second child pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
 			syslog(LOG_INFO, "Second child was finished\n");
+			find(path, date);
 			closelog();
 			_exit(0);
 		}

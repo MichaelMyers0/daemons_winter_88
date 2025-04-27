@@ -1,5 +1,9 @@
 #include "daemon.h"
 main()
 {
-	become_daemon(NULL);
+	time_t t;
+	char* s;
+	t = time(NULL);
+	s = ctime(&t);
+	become_daemon("./test", s);
 }
