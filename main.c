@@ -19,7 +19,7 @@ main()
 	child = fork();
 	if (child == -1)
 	{		
-		perror("fork()\n");
+		syslog(LOG_ERR, "Failed to create a process\n");
 		_exit(1);
 	}
 	if (child == 0)
@@ -28,18 +28,18 @@ main()
 		sid = setsid();
 		if (sid == -1)
 		{
-			perror("ERROR: Failed to start a new session\n");
+			syslog(LOG_ERR, "ERROR: Failed to start a new session\n");
 			_exit(2);
 		}
 		pid = getpid();
 		ppid = getppid();
 		pgrpid = getpgrp();
-		printf("child pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
+		syslog(LOG_INFO, "child pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
 		errno = 0;
 		child = fork();
 		if (child == -1)
 		{
-			perror("second fork()\n");
+			syslog(LOG_ERR, "second fork()\n");
 			_exit(3);
 		}		
 		if (child == 0)
@@ -47,25 +47,25 @@ main()
 			for (i = 0; i < CYCLE; i++)
 			{
 				sleep(SLEEP_T);
-				printf("Hello World\n");
+				syslog(LOG_INFO, "Hello World\n");
 			}
 			pid = getpid();
 			ppid = getppid();
 			pgrpid = getpgrp();
-			printf("second child pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
-			printf("Second child was finished\n");
+			syslog(LOG_INFO, "second child pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
+			syslog(LOG_INFO, "Second child was finished\n");
 			_exit(0);
 		}
 		else
 		{
-			printf("Child process was finished\n");
+			syslog(LOG_INFO, "Child process was finished\n");
 			_exit(0);
 		}
 	}
 	else
 	{
-		printf("pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
-		printf("Parent process was terminated\n");
+		syslog(LOG_INFO, "pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
+		syslog(LOG_INFO, "Parent process was terminated\n");
 		_exit(0);
 	}
 }
