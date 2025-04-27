@@ -54,6 +54,7 @@ main()
 			pgrpid = getpgrp();
 			syslog(LOG_INFO, "second child pid = %d\tppid = %d\tsid = %d\tpgrpid = %d\n", pid, ppid, sid, pgrpid);
 			syslog(LOG_INFO, "Second child was finished\n");
+			closelog();
 			_exit(0);
 		}
 		else
